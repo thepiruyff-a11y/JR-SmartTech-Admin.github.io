@@ -42,43 +42,6 @@
         ::-webkit-scrollbar-track { background: var(--dark-bg); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
-
-        .sync-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: #00f3ff;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .sync-dot {
-            width: 6px;
-            height: 6px;
-            background: #00f3ff;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .change-indicator {
-            background: rgba(188, 19, 254, 0.2);
-            border-left: 4px solid #bc13fe;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            font-size: 0.875rem;
-            color: #bc13fe;
-            font-family: 'Orbitron', sans-serif;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -90,13 +53,9 @@
                     <span class="px-3 py-1 bg-[#bc13fe]/20 border border-[#bc13fe] text-[#bc13fe] text-xs font-orbitron rounded uppercase tracking-wider">ADMIN PANEL</span>
                     <h1 class="text-2xl font-orbitron font-bold tracking-wider text-white">JR <span class="text-[#bc13fe]">SmartTec</span></h1>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="sync-badge">
-                        <div class="sync-dot"></div>
-                        <span>DATOS SINCRONIZADOS</span>
-                    </div>
-                    <a href="./index.html" target="_blank" class="text-sm font-orbitron text-gray-300 hover:text-[#00f3ff] transition-colors border border-gray-700 hover:border-[#00f3ff] px-4 py-2 rounded flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4m-4-10l-4 4m4-4v16"></path></svg>
+                <div>
+                    <a href="index.html" target="_blank" class="text-sm font-orbitron text-gray-300 hover:text-[#00f3ff] transition-colors border border-gray-700 hover:border-[#00f3ff] px-4 py-2 rounded flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         VER TIENDA
                     </a>
                 </div>
@@ -106,11 +65,6 @@
 
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
-        <!-- Indicador de cambios -->
-        <div id="change-indicator" class="change-indicator hidden">
-            ✓ Los cambios se guardan automáticamente. La tienda verá las actualizaciones.
-        </div>
-
         <!-- Estadísticas Rápidas -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <div class="glass-panel p-6 rounded-xl border-l-4 border-[#00f3ff]">
@@ -134,21 +88,10 @@
                     <h2 class="text-2xl font-orbitron font-bold text-white">INVENTARIO CENTRAL</h2>
                     <p class="text-gray-400 text-sm">Administra los productos, precios y stock en tiempo real.</p>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="openAddModal()" class="bg-[#bc13fe] text-white font-orbitron font-bold px-5 py-2.5 rounded hover:bg-white hover:text-black transition-all shadow-[0_0_15px_rgba(188,19,254,0.4)] flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        NUEVO
-                    </button>
-                    <button onclick="exportData()" class="bg-gray-700 text-white font-orbitron font-bold px-5 py-2.5 rounded hover:bg-gray-600 transition-all flex items-center gap-2" title="Descargar respaldo JSON">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                        EXPORT
-                    </button>
-                    <button onclick="document.getElementById('import-file').click()" class="bg-gray-700 text-white font-orbitron font-bold px-5 py-2.5 rounded hover:bg-gray-600 transition-all flex items-center gap-2" title="Restaurar desde JSON">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        IMPORT
-                    </button>
-                    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importFromFile(event)">
-                </div>
+                <button onclick="openAddModal()" class="bg-[#bc13fe] text-white font-orbitron font-bold px-5 py-2.5 rounded hover:bg-white hover:text-black transition-all shadow-[0_0_15px_rgba(188,19,254,0.4)] flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    NUEVO PRODUCTO
+                </button>
             </div>
 
             <div class="overflow-x-auto">
@@ -203,68 +146,126 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-orbitron text-[#bc13fe] mb-1">STOCK (Unidades)</label>
-                        <input type="number" id="p-stock" required min="0" class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]">
+                        <input type="number" id="p-stock" required class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]">
                     </div>
                     <div>
-                        <label class="block text-xs font-orbitron text-[#bc13fe] mb-1">URL IMAGEN</label>
-                        <input type="url" id="p-img" class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]" placeholder="https://...">
+                        <label class="block text-xs font-orbitron text-[#bc13fe] mb-1">URL DE IMAGEN</label>
+                        <input type="url" id="p-img" required class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-orbitron text-[#bc13fe] mb-1">DESCRIPCIÓN</label>
-                    <textarea id="p-desc" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]"></textarea>
+                    <textarea id="p-desc" rows="3" required class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]"></textarea>
                 </div>
-                <div>
-                    <label class="block text-xs font-orbitron text-[#bc13fe] mb-1">ESPECIFICACIONES (una por línea)</label>
-                    <textarea id="p-specs" rows="3" placeholder="Especificación 1&#10;Especificación 2&#10;Especificación 3" class="w-full bg-gray-900 border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-[#bc13fe]"></textarea>
-                </div>
-                <div class="flex gap-3 pt-4">
-                    <button type="submit" class="flex-1 bg-[#bc13fe] text-white font-orbitron font-bold py-2.5 rounded hover:bg-white hover:text-black transition-all">
-                        GUARDAR PRODUCTO
-                    </button>
-                    <button type="button" onclick="closeModal()" class="flex-1 bg-gray-700 text-white font-orbitron font-bold py-2.5 rounded hover:bg-gray-600 transition-all">
-                        CANCELAR
-                    </button>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded bg-gray-800 text-gray-300 font-orbitron hover:bg-gray-700">CANCELAR</button>
+                    <button type="submit" class="px-5 py-2.5 rounded bg-[#bc13fe] text-white font-orbitron font-bold hover:bg-white hover:text-black transition-colors">GUARDAR</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Confirmar Eliminar -->
+    <!-- Modal Eliminar -->
     <div id="delete-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm rounded-2xl p-6 md:p-8 border border-red-500/40">
-            <h3 class="text-xl font-orbitron font-bold text-white mb-4">Confirmar Eliminación</h3>
-            <p class="text-gray-400 mb-6">¿Estás seguro de que deseas eliminar este producto del sistema? Esta acción no se puede deshacer.</p>
-            <div class="flex gap-3">
-                <button id="btn-confirm-delete" class="flex-1 bg-red-600 text-white font-orbitron font-bold py-2.5 rounded hover:bg-red-700 transition-all">
-                    ELIMINAR
-                </button>
-                <button onclick="closeDeleteModal()" class="flex-1 bg-gray-700 text-white font-orbitron font-bold py-2.5 rounded hover:bg-gray-600 transition-all">
-                    CANCELAR
-                </button>
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-red-500/40 text-center">
+            <h3 class="text-xl font-orbitron font-bold text-white mb-2">¿Purgar Producto?</h3>
+            <p class="text-gray-400 text-sm mb-6">Esta acción eliminará permanentemente el registro de la red central de JR SmartTec.</p>
+            <div class="flex justify-center space-x-4">
+                <button onclick="closeDeleteModal()" class="px-5 py-2 rounded bg-gray-800 text-gray-300 font-orbitron hover:bg-gray-700">CANCELAR</button>
+                <button id="btn-confirm-delete" class="px-5 py-2 rounded bg-red-600 text-white font-orbitron font-bold hover:bg-red-500 transition-colors">ELIMINAR</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-[100] space-y-3"></div>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-3"></div>
 
-    <!-- Scripts -->
-    <script src="./js/shared.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'jr-smarttec-db';
+        
+        // --- PEGA TUS DATOS DE FIREBASE AQUÍ ---
+        const miFirebaseConfig = {
+            apiKey: "AIzaSyDeNidguZDb3mPwtv-4_M7iY3v_4I2YZ64",
+            authDomain: "jr-smarttech-7a905.firebaseapp.com",
+            databaseURL: "https://jr-smarttech-7a905-default-rtdb.firebaseio.com",
+            projectId: "jr-smarttech-7a905",
+            storageBucket: "jr-smarttech-7a905.firebasestorage.app",
+            messagingSenderId: "1040964022664",
+            appId: "1:1040964022664:web:f8f953a0d987ac266d0a3d"
+        };
+        // Usa tu configuración si estás en GitHub Pages
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : miFirebaseConfig;
+
+        window.adminDB = {
+            'prod_1': { name: 'Neural Bass V1', price: 120.00, stock: 12, img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop', desc: 'Experimenta el sonido con conexión neuronal directa.', specs: ['Batería: 120h Grafeno'], cat: 'AUDÍFONOS' },
+            'prod_2': { name: 'Stealth Pods X', price: 89.99, stock: 5, img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=600&auto=format&fit=crop', desc: 'Micro-auriculares diseñados con metamateriales.', specs: ['Tamaño: 4mm'], cat: 'AUDÍFONOS' },
+            'prod_3': { name: 'Synapse Headset', price: 150.00, stock: 8, img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=600&auto=format&fit=crop', desc: 'Auriculares over-ear para inmersión total.', specs: ['Latencia Cero'], cat: 'AUDÍFONOS' },
+            'prod_4': { name: 'Quantum Pad', price: 65.00, stock: 20, img: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=600&auto=format&fit=crop', desc: 'Base de carga inalámbrica por resonancia.', specs: ['150W Salida'], cat: 'CARGADORES' },
+            'prod_5': { name: 'Hyper-Link Cable', price: 25.99, stock: 50, img: 'https://images.unsplash.com/photo-1615526675159-e248c3021d3f?q=80&w=600&auto=format&fit=crop', desc: 'Cable con núcleo trenzado de nanotubos.', specs: ['240W Soportados'], cat: 'CARGADORES' },
+            'prod_6': { name: 'Mecha-Case Armor', price: 45.00, stock: 15, img: 'https://images.unsplash.com/photo-1605236453806-6ff3685e2228?q=80&w=600&auto=format&fit=crop', desc: 'Carcasa de aleación de titanio.', specs: ['Grado Militar'], cat: 'ACCESORIOS' },
+            'prod_7': { name: 'Cyber-Watch Band', price: 35.50, stock: 3, img: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?q=80&w=600&auto=format&fit=crop', desc: 'Correa inteligente que proyecta.', specs: ['Láser Holográfico'], cat: 'ACCESORIOS' }
+        };
+
+        if (firebaseConfig) {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+
+            async function initCloudDB() {
+                try {
+                    const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    if (token) await signInWithCustomToken(auth, token);
+                    else await signInAnonymously(auth);
+
+                    if (!auth.currentUser) return;
+
+                    const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                    
+                    onSnapshot(productsRef, (snapshot) => {
+                        if (snapshot.empty && !window.cloudSeeded) {
+                            window.cloudSeeded = true;
+                            for (const id in window.adminDB) {
+                                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), window.adminDB[id]);
+                            }
+                            return;
+                        }
+
+                        if (!snapshot.empty) {
+                            window.adminDB = {};
+                            snapshot.forEach((docSnap) => {
+                                window.adminDB[docSnap.id] = docSnap.data();
+                            });
+                            window.renderTable();
+                            window.updateStats();
+                        }
+                    }, (error) => console.error("Error Enlace DB:", error));
+
+                    window.saveToCloud = async (id, data) => await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), data);
+                    window.deleteFromCloud = async (id) => await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+                } catch (e) { console.error(e); }
+            }
+            initCloudDB();
+        }
+    </script>
+
     <script>
         let idToDelete = null;
 
-        /**
-         * Renderizar tabla de inventario
-         */
+        window.onload = () => {
+            renderTable();
+            updateStats();
+        };
+
         window.renderTable = function() {
             const tbody = document.getElementById('inventory-table');
             if(!tbody) return;
             tbody.innerHTML = '';
             
-            const products = window.productManager.getAll();
-            for (let id in products) {
-                const prod = products[id];
+            for (let id in window.adminDB) {
+                const prod = window.adminDB[id];
                 const stockColor = prod.stock < 10 ? 'text-yellow-400 font-bold' : 'text-white';
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-900/50 transition-colors">
@@ -291,18 +292,14 @@
             }
         };
 
-        /**
-         * Actualizar estadísticas
-         */
         window.updateStats = function() {
-            const products = window.productManager.getAll();
-            let totalProds = Object.keys(products).length;
+            let totalProds = Object.keys(window.adminDB).length;
             let totalValue = 0;
             let lowStock = 0;
 
-            for (let id in products) {
-                totalValue += products[id].price * products[id].stock;
-                if (products[id].stock < 10) lowStock++;
+            for (let id in window.adminDB) {
+                totalValue += window.adminDB[id].price * window.adminDB[id].stock;
+                if (window.adminDB[id].stock < 10) lowStock++;
             }
 
             document.getElementById('stat-total').innerText = totalProds;
@@ -310,9 +307,6 @@
             document.getElementById('stat-low').innerText = lowStock;
         };
 
-        /**
-         * Abrir modal para agregar
-         */
         window.openAddModal = function() {
             document.getElementById('form-action').value = 'add';
             document.getElementById('modal-title').innerText = 'Agregar Nuevo Producto';
@@ -321,18 +315,12 @@
             document.getElementById('product-modal').classList.remove('hidden');
         };
 
-        /**
-         * Cerrar modal
-         */
         window.closeModal = function() {
             document.getElementById('product-modal').classList.add('hidden');
         };
 
-        /**
-         * Editar producto
-         */
         window.editProduct = function(id) {
-            const prod = window.productManager.getById(id);
+            const prod = window.adminDB[id];
             document.getElementById('p-id').value = id;
             document.getElementById('p-id').readOnly = true;
             document.getElementById('p-name').value = prod.name;
@@ -341,130 +329,67 @@
             document.getElementById('p-stock').value = prod.stock;
             document.getElementById('p-img').value = prod.img;
             document.getElementById('p-desc').value = prod.desc;
-            document.getElementById('p-specs').value = prod.specs.join('\n');
             
             document.getElementById('form-action').value = 'edit';
             document.getElementById('modal-title').innerText = 'Editar Producto';
             document.getElementById('product-modal').classList.remove('hidden');
         };
 
-        /**
-         * Confirmar eliminación
-         */
         window.confirmDelete = function(id) {
             idToDelete = id;
             document.getElementById('delete-modal').classList.remove('hidden');
         };
 
-        /**
-         * Cerrar modal de eliminación
-         */
         window.closeDeleteModal = function() {
             idToDelete = null;
             document.getElementById('delete-modal').classList.add('hidden');
         };
 
-        /**
-         * Guardar o actualizar producto
-         */
         document.getElementById('product-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const action = document.getElementById('form-action').value;
             const id = document.getElementById('p-id').value;
 
-            if (action === 'add' && window.productManager.getById(id)) {
+            if (action === 'add' && window.adminDB[id]) {
                 showToast('Error: El ID Único ya existe en el nodo.');
                 return;
             }
 
-            const specs = document.getElementById('p-specs').value
-                .split('\n')
-                .map(s => s.trim())
-                .filter(s => s.length > 0);
-
-            const productData = {
-                id: id,
+            window.adminDB[id] = {
                 name: document.getElementById('p-name').value,
                 cat: document.getElementById('p-cat').value,
                 price: parseFloat(document.getElementById('p-price').value),
                 stock: parseInt(document.getElementById('p-stock').value),
-                img: document.getElementById('p-img').value || 'https://via.placeholder.com/300x300?text=Producto',
+                img: document.getElementById('p-img').value,
                 desc: document.getElementById('p-desc').value,
-                specs: specs.length > 0 ? specs : ['Especificación genérica de sistema']
+                specs: window.adminDB[id] && window.adminDB[id].specs ? window.adminDB[id].specs : ['Especificación genérica de sistema']
             };
 
-            if (action === 'add') {
-                window.productManager.addProduct(id, productData);
-            } else {
-                window.productManager.updateProduct(id, productData);
+            if (window.saveToCloud) {
+                window.saveToCloud(id, window.adminDB[id]);
             }
-
-            // Guardar a localStorage como respaldo
-            window.productManager.saveToLocalStorage();
 
             renderTable();
             updateStats();
             closeModal();
             showToast(action === 'add' ? 'Producto inicializado en la red.' : 'Datos del producto actualizados.');
-            showChangeIndicator();
         });
 
-        /**
-         * Confirmar y ejecutar eliminación
-         */
         document.getElementById('btn-confirm-delete').addEventListener('click', () => {
-            if (idToDelete && window.productManager.getById(idToDelete)) {
-                window.productManager.deleteProduct(idToDelete);
-                window.productManager.saveToLocalStorage();
+            if (idToDelete && window.adminDB[idToDelete]) {
+                delete window.adminDB[idToDelete];
+                
+                if (window.deleteFromCloud) {
+                    window.deleteFromCloud(idToDelete);
+                }
+
                 renderTable();
                 updateStats();
                 showToast('Datos purgados del sistema.');
-                showChangeIndicator();
             }
             closeDeleteModal();
         });
 
-        /**
-         * Exportar datos como JSON
-         */
-        window.exportData = function() {
-            window.productManager.exportAsJSON();
-            showToast('Respaldo descargado exitosamente.');
-        };
-
-        /**
-         * Importar datos desde JSON
-         */
-        window.importFromFile = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            try {
-                await window.productManager.importFromFile(file);
-                renderTable();
-                updateStats();
-                showToast('Datos importados correctamente. ¡Recuerda actualizar la tienda!');
-                showChangeIndicator();
-                event.target.value = ''; // Reset input
-            } catch (error) {
-                showToast('Error importando archivo: ' + error.message);
-            }
-        };
-
-        /**
-         * Mostrar notificación de cambios
-         */
-        function showChangeIndicator() {
-            const indicator = document.getElementById('change-indicator');
-            indicator.classList.remove('hidden');
-            setTimeout(() => {
-                indicator.classList.add('hidden');
-            }, 5000);
-        }
-
-        /**
-         * Mostrar notificación
-         */
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -473,14 +398,6 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
-
-        // Inicializar
-        window.onload = async () => {
-            await window.productManager.loadProducts();
-            renderTable();
-            updateStats();
-            showToast('Panel de admin cargado. Datos sincronizados.');
-        };
     </script>
 </body>
 </html>
