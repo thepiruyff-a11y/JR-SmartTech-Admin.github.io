@@ -6,8 +6,6 @@
     <title>JR SmartTec | Panel de Administración</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
     
     <style>
         body {
@@ -118,6 +116,7 @@
                         </tr>
                     </thead>
                     <tbody id="inventory-table" class="divide-y divide-gray-800 text-sm">
+                        <tr><td colspan="5" class="text-center p-4 text-gray-400 font-orbitron">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -159,12 +158,21 @@
 
     <div id="toast-container" class="fixed bottom-6 right-6 z-[100] space-y-3"></div>
 
-    <script src="./firebase-shared.js"></script>
-    <script>
-        let idToDelete = null;
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
 
+    <!-- Nuestro script -->
+    <script src="./firebase-shared-FIXED.js"></script>
+
+    <script>
         async function renderTable() {
             const tbody = document.getElementById('inventory-table');
+            if (!window.productManager) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-gray-400 font-orbitron">Esperando Firebase...</td></tr>';
+                return;
+            }
+
             const products = window.productManager.getAll();
             
             tbody.innerHTML = '';
@@ -192,6 +200,7 @@
         }
 
         function updateStats() {
+            if (!window.productManager) return;
             const products = window.productManager.getAll();
             let totalProds = Object.keys(products).length;
             let totalValue = 0;
@@ -220,7 +229,10 @@
         }
 
         function editProduct(id) {
+            if (!window.productManager) return;
             const prod = window.productManager.getById(id);
+            if (!prod) return;
+
             document.getElementById('p-id').value = id;
             document.getElementById('p-id').readOnly = true;
             document.getElementById('p-name').value = prod.name;
@@ -237,14 +249,21 @@
 
         function confirmDelete(id) {
             if (confirm('¿Eliminar este producto?')) {
-                window.productManager.deleteProduct(id).then(() => {
-                    showToast('Producto eliminado');
-                }).catch(err => showToast('Error: ' + err.message));
+                if (window.productManager) {
+                    window.productManager.deleteProduct(id).then(() => {
+                        showToast('Producto eliminado');
+                    }).catch(err => showToast('Error: ' + err.message));
+                }
             }
         }
 
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!window.productManager) {
+                showToast('Firebase no está listo');
+                return;
+            }
+
             const action = document.getElementById('form-action').value;
             const id = document.getElementById('p-id').value;
 
@@ -273,13 +292,15 @@
         });
 
         function exportData() {
-            window.productManager.exportAsJSON();
-            showToast('Descargando respaldo...');
+            if (window.productManager) {
+                window.productManager.exportAsJSON();
+                showToast('Descargando respaldo...');
+            }
         }
 
         async function importFromFile(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file || !window.productManager) return;
 
             try {
                 await window.productManager.importFromFile(file);
@@ -299,19 +320,19 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Suscribirse a cambios
-        window.productManager.onChange(() => {
-            renderTable();
-            updateStats();
-        });
-
-        // Inicializar
-        window.onload = async () => {
-            await window.productManager.loadProducts();
-            renderTable();
-            updateStats();
-            showToast('Conectado a Firebase');
-        };
+        // Esperar a que ProductManager esté listo
+        const checkProductManager = setInterval(() => {
+            if (window.productManager) {
+                window.productManager.onChange(() => {
+                    renderTable();
+                    updateStats();
+                });
+                renderTable();
+                updateStats();
+                clearInterval(checkProductManager);
+                showToast('Conectado a Firebase ✅');
+            }
+        }, 100);
     </script>
 </body>
 </html>
