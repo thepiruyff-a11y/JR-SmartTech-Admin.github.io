@@ -13,7 +13,6 @@ const firebaseConfig = {
   messagingSenderId: "1040964022664",
   appId: "1:1040964022664:web:f8f953a0d987ac266d0a3d"
 };
-
 console.log('📦 firebase-rest-api.js iniciando (SIN CDN)...');
 
 /**
